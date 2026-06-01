@@ -7,6 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab 9</title>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "687e4a820b384a9e91d7c4866e70fdbb"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+
   <style>
     button {
       margin: 3px;
@@ -88,6 +96,24 @@
   </main>
 
   <script>
+    class EmptyInputError extends Error {
+      constructor(message) {
+      super(message);
+      this.name = "EmptyInputError";
+      }
+    }
+
+    class CalculatorError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'CalculatorError';
+      }
+    }
+
+    window.addEventListener('error', (event) => {
+      console.log(`Global error caught: ${event.message}`);
+  });
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +121,101 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try{
+        if (firstNum === '' || secondNum === ''){
+          throw new EmptyInputError('Both numbers are requireed.')
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch (error){
+        output.innerHTML = error.message;
+        return;
+      }
+      finally{
+        console.log('Calculation attempted.');
+      }
+      
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
-    // You may move this JS to another file if you wish
+    // 0 - console.log
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Hello from console.log!');
+    });
+
+    // 1 - console.error
+    errorBtns[1].addEventListener('click', () => {
+      console.error('This is an error message.');
+    });
+
+    // 2 - console.count
+    errorBtns[2].addEventListener('click', () => {
+      console.count('count');
+    });
+
+    // 3 - console.warn
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('This is a warning.');
+    });
+
+    // 4 - console.assert
+    errorBtns[4].addEventListener('click', () => {
+      console.assert(1 === 2, 'Assertion failed: 1 does not equal 2');
+    });
+
+    // 5 - console.clear
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+
+    // 6 - console.dir
+    errorBtns[6].addEventListener('click', () => {
+      console.dir(document.body);
+    });
+
+    // 7 - console.dirxml
+    errorBtns[7].addEventListener('click', () => {
+      console.dirxml(document.body);
+    });
+
+    // 8 - console.group
+    errorBtns[8].addEventListener('click', () => {
+      console.group('My Group');
+      console.log('Inside the group');
+    });
+
+    // 9 - console.groupEnd
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+
+    // 10 - console.table
+    errorBtns[10].addEventListener('click', () => {
+      console.table([{ name: 'Alice', age: 25 }, { name: 'Bob', age: 30 }]);
+    });
+
+    // 11 - console.time
+    errorBtns[11].addEventListener('click', () => {
+      console.time('myTimer');
+    });
+
+    // 12 - console.timeEnd
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd('myTimer');
+    });
+
+    // 13 - console.trace
+    errorBtns[13].addEventListener('click', () => {
+      console.trace('Trace called here');
+    });
+
+    // 14 - Trigger a Global Error (no try/catch — lets it bubble up)
+    errorBtns[14].addEventListener('click', () => {
+      throw new CalculatorError('This error was not caught locally, from Lab 9!');
+    });
+
   </script>
 </body>
 
